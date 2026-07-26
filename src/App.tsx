@@ -18,10 +18,13 @@ const AppContainer = styled.div`
 const DualColumnContainer = styled.div`
   display: flex;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const ShowdownInput = styled.textarea`
-  width: 100%;
   min-width: 250px;
   max-width: 350px;
   min-height: 300px;
@@ -32,11 +35,15 @@ const ShowdownInput = styled.textarea`
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    max-height: 300px;
+  }
 `;
 
 const DownloadButton = styled.button`
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 10px 38px;
   font-size: 16px;
 `;
 
