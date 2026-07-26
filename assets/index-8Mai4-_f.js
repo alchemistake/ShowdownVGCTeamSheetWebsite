@@ -122,8 +122,11 @@ end`},P2=function(){return`<`+[...arguments].join(``)+`>`},F2=function(e){return
 `,J5=Nn.div`
   display: flex;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `,Y5=Nn.textarea`
-  width: 100%;
   min-width: 250px;
   max-width: 350px;
   min-height: 300px;
@@ -134,8 +137,12 @@ end`},P2=function(){return`<`+[...arguments].join(``)+`>`},F2=function(e){return
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    max-height: 300px;
+  }
 `,X5=Nn.button`
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 10px 38px;
   font-size: 16px;
 `;function Z5(){let[e,t]=Pe.useState(``),[n,r]=Pe.useState(()=>new N5),i=new zn(_Q).get(9).dex;return(0,F5.jsxs)(q5,{children:[(0,F5.jsx)(`h1`,{children:`Showdown to VGC Team Sheet`}),(0,F5.jsx)(`p`,{children:`Convert your Showdown team to a VGC team sheet!`}),(0,F5.jsxs)(J5,{children:[(0,F5.jsx)(Y5,{placeholder:`Paste your Showdown team here...`,spellCheck:`false`,value:e,onChange:e=>t(e.target.value)}),(0,F5.jsx)(K5,{information:n,onChange:(e,t)=>{r(n=>({...n,[e]:t}))}})]}),(0,F5.jsx)(X5,{onClick:()=>{if(e.trim().length===0)return;let t=e$(KQ(e),i,`champions`,n);console.log(n),t&&C5(t,new Date().toISOString().split(`T`)[0])},children:`Download VGC Team Sheet`})]})}(0,Ne.createRoot)(document.getElementById(`root`)).render((0,F5.jsx)(Pe.StrictMode,{children:(0,F5.jsx)(Z5,{})}));
