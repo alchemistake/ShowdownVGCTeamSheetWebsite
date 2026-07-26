@@ -13,7 +13,7 @@ import type { VGCSheet } from "../types/vgc-sheet";
  * @throws Will log an error to console if the PDF template cannot be loaded
  */
 export async function generatePDF(vgcData: VGCSheet, teamName: string | undefined): Promise<void> {
-	const pdfBytes = await fetch("public/champions.pdf").then((res) => res.arrayBuffer());
+	const pdfBytes = await fetch("champions.pdf").then((res) => res.arrayBuffer());
 	if (!pdfBytes) {
 		console.error(`Failed to load PDF template from public/champions.pdf`);
 		return;
