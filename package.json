@@ -15,9 +15,10 @@
     "react-dom": "^19.2.7",
     "styled-components": "^6.4.4",
     "@pkmn/data": "^0.10.7",
-    "@pkmn/dex": "^0.10.7",
+    "@pkmn/dex": "^0.10.11",
     "@pkmn/sets": "^5.2.0",
-    "@smogon/calc": "^0.11.0"
+    "@smogon/calc": "^0.11.0",
+    "pdf-lib": "^1.17.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
