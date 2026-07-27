@@ -69,8 +69,6 @@ export default function App() {
     const parsedTeam = parseShowdownTeam(showdownTeam);
     const vgcSheet = getVGCSheet(parsedTeam, dex, "champions", playerInformation);
 
-  console.log(playerInformation)    
-
     if (vgcSheet) {
       generatePDF(vgcSheet, new Date().toISOString().split("T")[0]);
     }
