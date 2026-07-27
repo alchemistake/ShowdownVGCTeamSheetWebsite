@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { parseShowdownTeam } from "./utils/parser";
-import { getVGCSheet } from "./utils/sheet-converter";
-import { Dex } from "@pkmn/dex";
-import { Generations } from "@pkmn/data";
-import React from "react";
-import { generatePDF } from "./utils/pdf";
+import React, { useEffect } from "react";
 import PlayerInformationComponent from "./components/PlayerInformation.component";
 import { PlayerInformation } from "./types/player-information";
+import getShowdownTeam from "../lib/utils/showdown-parser";
+import { getVGCTeam } from "../lib/utils/vgc-team-parser";
+import { Generations, type Generation, type GenerationNum } from "@pkmn/data";
+import { Dex } from "@pkmn/dex";
+import { generatePDF } from "./utils/pdf";
 
 const AppContainer = styled.div`
   display: flex;
@@ -48,11 +48,18 @@ const DownloadButton = styled.button`
 `;
 
 export default function App() {
-  const [showdownTeam, setShowdownTeam] = React.useState("");
+  const [generationNum] = React.useState<GenerationNum>(9);
+  const [generation, setGeneration] = React.useState<Generation>();
+
+  const [showdownTeamText, setShowdownTeamText] = React.useState("");
   const [playerInformation, setPlayerInformation] =
     React.useState<PlayerInformation>(() => new PlayerInformation());
 
-  const dex = new Generations(Dex).get(9).dex;
+  useEffect(() => {
+    const newGeneration = new Generations(Dex).get(generationNum);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setGeneration(newGeneration)
+  }, [generationNum]);
 
   const handlePlayerInformationChange = <K extends keyof PlayerInformation>(
     field: K,
@@ -68,18 +75,15 @@ export default function App() {
   };
 
   const handleDownload = () => {
-    if (showdownTeam.trim().length === 0) return;
+    if (showdownTeamText.trim().length === 0) return;
 
-    const parsedTeam = parseShowdownTeam(showdownTeam);
-    const vgcSheet = getVGCSheet(
-      parsedTeam,
-      dex,
-      "champions",
-      playerInformation,
-    );
+    const parsedTeam = getShowdownTeam(showdownTeamText, generationNum);
+    console.log(parsedTeam);
+    const vgcTeam = getVGCTeam(parsedTeam, generation!.dex, 'champions')
+    console.log(vgcTeam)    
 
-    if (vgcSheet) {
-      generatePDF(vgcSheet, new Date().toISOString().split("T")[0]);
+    if (vgcTeam) {
+      generatePDF(vgcTeam, playerInformation, 'champions', new Date().toISOString().split("T")[0]);
     }
   };
 
@@ -91,8 +95,8 @@ export default function App() {
         <ShowdownInput
           placeholder="Paste your Showdown team here..."
           spellCheck="false"
-          value={showdownTeam}
-          onChange={(e) => setShowdownTeam(e.target.value)}
+          value={showdownTeamText}
+          onChange={(e) => setShowdownTeamText(e.target.value)}
         />
 
         <PlayerInformationComponent

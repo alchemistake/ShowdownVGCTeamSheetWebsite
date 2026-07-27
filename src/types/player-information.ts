@@ -8,6 +8,6 @@ export class PlayerInformation {
     switchName: string | undefined;
     division: Divisions | undefined;
     playerId: string | number | undefined;
-    dateOfBirth: Date | undefined; // Format: DD-MM-YYYY
+    dateOfBirth: Date | undefined;
     supportId: string | number | undefined;
 };

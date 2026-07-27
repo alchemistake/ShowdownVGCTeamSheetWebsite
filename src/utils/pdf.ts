@@ -1,7 +1,11 @@
 import { PDFCheckBox, PDFDocument, PDFForm, PDFTextField } from "pdf-lib";
-import type { VGCSheet } from "../types/vgc-sheet";
+import type { VGCTeam } from "../../lib/types/vgc-team";
+import type { PlayerInformation } from "../types/player-information";
+import type { Format } from "../../lib/types/format";
 
-export async function generatePDF(vgcData: VGCSheet, teamName: string | undefined): Promise<void> {
+export async function generatePDF(vgcTeam: VGCTeam, info: PlayerInformation, format: Format, teamName: string | undefined): Promise<void> {
+	if (!vgcTeam) return;
+
 	const pdfBytes = await fetch("champions.pdf").then((res) => res.arrayBuffer());
 	if (!pdfBytes) {
 		console.error(`Failed to load PDF template from public/champions.pdf`);
@@ -10,30 +14,30 @@ export async function generatePDF(vgcData: VGCSheet, teamName: string | undefine
 
 	await PDFDocument.load(pdfBytes).then((pdfDoc) => {
 		const form = pdfDoc.getForm();
-		setTextField(form, "Player ID", vgcData.playerInformation?.playerId?.toString() ?? '')
-		setTextField(form, "Support ID", vgcData.playerInformation?.supportId?.toString() ?? '')
-		setDateFields(form, vgcData.playerInformation?.dateOfBirth)
+		setTextField(form, "Player ID", info?.playerId?.toString() ?? '')
+		setTextField(form, "Support ID", info?.supportId?.toString() ?? '')
+		setDateFields(form, info?.dateOfBirth)
 
 		for (let i = 0; i < 2; i++) {
-			setTextField(form, getFieldName("Player Name", i), vgcData.playerInformation?.playerName ?? '')
-			setTextField(form, getFieldName("Trainer Name in Game", i), vgcData.playerInformation?.trainerName ?? '')
-			setTextField(form, getFieldName("Battle Team Number Name", i), vgcData.playerInformation?.battleTeamName ?? '')
-			setTextField(form, getFieldName("Switch Profile Name", i), vgcData.playerInformation?.switchName ?? '')
-			setCheckBox(form, vgcData.playerInformation?.division ?? null, i)
+			setTextField(form, getFieldName("Player Name", i), info?.playerName ?? '')
+			setTextField(form, getFieldName("Trainer Name in Game", i), info?.trainerName ?? '')
+			setTextField(form, getFieldName("Battle Team Number Name", i), info?.battleTeamName ?? '')
+			setTextField(form, getFieldName("Switch Profile Name", i), info?.switchName ?? '')
+			setCheckBox(form, info?.division ?? null, i)
 		}
 
-		for (let i = 0; i < vgcData.team.length; i++) {
-			const poke = vgcData.team[i];
+		for (let i = 0; i < vgcTeam.length; i++) {
+			const poke = vgcTeam[i];
 
-			setPokemonTextFields(form, "Pokémon", i, poke.name);
-			if (vgcData.format === "champions") {
+			setPokemonTextFields(form, "Pokémon", i, poke.name!);
+			if (format === "champions") {
 				setPokemonTextFields(form, "Stat Alignment", i, poke.nature || ""); // Set nature in the stat alignment field if available, otherwise leave it blank
 			} else {
-				setStatTextField(form, `Level`, i, poke.level);
-				setPokemonTextFields(form, "Tera Type", i, poke.tera);
+				setStatTextField(form, `Level`, i, poke.level!);
+				setPokemonTextFields(form, "Tera Type", i, poke.teraType!);
 			}
-			setPokemonTextFields(form, "Ability", i, poke.ability);
-			setPokemonTextFields(form, "Held Item", i, poke.item);
+			setPokemonTextFields(form, "Ability", i, poke.ability!);
+			setPokemonTextFields(form, "Held Item", i, poke.item!);
 
 			setStatTextField(form, `HP`, i, poke.stats.hp);
 			setStatTextField(form, `Atk`, i, poke.stats.atk);
@@ -42,8 +46,8 @@ export async function generatePDF(vgcData: VGCSheet, teamName: string | undefine
 			setStatTextField(form, `Sp Def`, i, poke.stats.spd);
 			setStatTextField(form, `Speed`, i, poke.stats.spe);
 
-			for (let j = 0; j < poke.moves.length; j++) {
-				setPokemonTextFields(form, `Move ${j + 1}`, i, poke.moves[j]);
+			for (let j = 0; j < poke.moves!.length; j++) {
+				setPokemonTextFields(form, `Move ${j + 1}`, i, poke.moves![j]);
 			}
 		}
 
