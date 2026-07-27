@@ -49,7 +49,8 @@ const DownloadButton = styled.button`
 
 export default function App() {
   const [showdownTeam, setShowdownTeam] = React.useState("");
-  const [playerInformation, setPlayerInformation] = React.useState<PlayerInformation>(() => new PlayerInformation());
+  const [playerInformation, setPlayerInformation] =
+    React.useState<PlayerInformation>(() => new PlayerInformation());
 
   const dex = new Generations(Dex).get(9).dex;
 
@@ -57,17 +58,25 @@ export default function App() {
     field: K,
     value: PlayerInformation[K],
   ) => {
-    setPlayerInformation((prev) => ({
-      ...prev,
-      [field]: value,
-    } as PlayerInformation));
+    setPlayerInformation(
+      (prev) =>
+        ({
+          ...prev,
+          [field]: value,
+        }) as PlayerInformation,
+    );
   };
 
   const handleDownload = () => {
     if (showdownTeam.trim().length === 0) return;
 
     const parsedTeam = parseShowdownTeam(showdownTeam);
-    const vgcSheet = getVGCSheet(parsedTeam, dex, "champions", playerInformation);
+    const vgcSheet = getVGCSheet(
+      parsedTeam,
+      dex,
+      "champions",
+      playerInformation,
+    );
 
     if (vgcSheet) {
       generatePDF(vgcSheet, new Date().toISOString().split("T")[0]);
@@ -86,7 +95,10 @@ export default function App() {
           onChange={(e) => setShowdownTeam(e.target.value)}
         />
 
-        <PlayerInformationComponent information={playerInformation} onChange={handlePlayerInformationChange} />
+        <PlayerInformationComponent
+          information={playerInformation}
+          onChange={handlePlayerInformationChange}
+        />
       </DualColumnContainer>
 
       <DownloadButton onClick={handleDownload}>
