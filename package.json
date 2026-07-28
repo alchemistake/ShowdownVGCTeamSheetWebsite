@@ -12,10 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@pkmn/data": "^0.10.7",
-    "@pkmn/dex": "^0.10.11",
-    "@pkmn/sets": "^5.2.0",
-    "@smogon/calc": "^0.11.0",
+    "@kasp470f/showdown-to-vgc": "^0.1.8",
     "pdf-lib": "^1.17.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

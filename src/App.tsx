@@ -1,12 +1,10 @@
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import React from "react";
 import PlayerInformationComponent from "./components/PlayerInformation.component";
 import { PlayerInformation } from "./types/player-information";
-import getShowdownTeam from "../lib/utils/showdown-parser";
-import { getVGCTeam } from "../lib/utils/vgc-team-parser";
-import { Generations, type Generation, type GenerationNum } from "@pkmn/data";
-import { Dex } from "@pkmn/dex";
+import { type GenerationNum } from "@pkmn/data";
 import { generatePDF } from "./utils/pdf";
+import { getShowdownTeam, getVGCTeam } from "@kasp470f/showdown-to-vgc"
 
 const AppContainer = styled.div`
   display: flex;
@@ -49,17 +47,10 @@ const DownloadButton = styled.button`
 
 export default function App() {
   const [generationNum] = React.useState<GenerationNum>(9);
-  const [generation, setGeneration] = React.useState<Generation>();
 
   const [showdownTeamText, setShowdownTeamText] = React.useState("");
   const [playerInformation, setPlayerInformation] =
     React.useState<PlayerInformation>(() => new PlayerInformation());
-
-  useEffect(() => {
-    const newGeneration = new Generations(Dex).get(generationNum);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGeneration(newGeneration)
-  }, [generationNum]);
 
   const handlePlayerInformationChange = <K extends keyof PlayerInformation>(
     field: K,
@@ -78,8 +69,9 @@ export default function App() {
     if (showdownTeamText.trim().length === 0) return;
 
     const parsedTeam = getShowdownTeam(showdownTeamText, generationNum);
-    console.log(parsedTeam);
-    const vgcTeam = getVGCTeam(parsedTeam, generation!.dex, 'champions')
+    if (!parsedTeam) return; 
+
+    const vgcTeam = getVGCTeam(parsedTeam, generationNum, 'champions')
     console.log(vgcTeam)    
 
     if (vgcTeam) {
