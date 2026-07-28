@@ -1,7 +1,6 @@
 import { PDFCheckBox, PDFDocument, PDFForm, PDFTextField } from "pdf-lib";
-import type { VGCTeam } from "../../lib/types/vgc-team";
 import type { PlayerInformation } from "../types/player-information";
-import type { Format } from "../../lib/types/format";
+import type { Format, VGCTeam } from "@kasp470f/showdown-to-vgc";
 
 export async function generatePDF(vgcTeam: VGCTeam, info: PlayerInformation, format: Format, teamName: string | undefined): Promise<void> {
 	if (!vgcTeam) return;

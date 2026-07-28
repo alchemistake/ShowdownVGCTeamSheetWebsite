@@ -12,7 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@kasp470f/showdown-to-vgc": "^0.1.8",
+    "@kasp470f/showdown-to-vgc": "^0.1.10",
     "pdf-lib": "^1.17.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
