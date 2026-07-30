@@ -4,16 +4,24 @@ import PlayerInformationComponent from "./components/PlayerInformation.component
 import { PlayerInformation } from "./types/player-information";
 import { type GenerationNum } from "@pkmn/data";
 import { generatePDF } from "./utils/pdf";
-import { getShowdownTeam, getVGCTeam } from "@kasp470f/showdown-to-vgc"
+import { getShowdownTeam, getVGCTeam } from "@kasp470f/showdown-to-vgc";
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+`;
+
+const AppTitle = styled.h1`
+  margin-bottom: 0;
+`;
+
+const AppSubTitle = styled.p`
+  color: #4d4d4d;
 `;
 
 const DualColumnContainer = styled.div`
+  margin-top: 1rem;
   display: flex;
   gap: 20px;
 
@@ -43,6 +51,10 @@ const DownloadButton = styled.button`
   margin-top: 20px;
   padding: 10px 38px;
   font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 50%;
+  background-color: #fafafa;
 `;
 
 export default function App() {
@@ -71,18 +83,22 @@ export default function App() {
     const parsedTeam = getShowdownTeam(showdownTeamText, generationNum);
     if (!parsedTeam) return; 
 
-    const vgcTeam = getVGCTeam(parsedTeam, generationNum, 'champions')
-    console.log(vgcTeam)    
+    const vgcTeam = getVGCTeam(parsedTeam, generationNum, "champions");
 
     if (vgcTeam) {
-      generatePDF(vgcTeam, playerInformation, 'champions', new Date().toISOString().split("T")[0]);
+      generatePDF(
+        vgcTeam,
+        playerInformation,
+        "champions",
+        new Date().toISOString().split("T")[0],
+      );
     }
   };
 
   return (
     <AppContainer>
-      <h1>Showdown to VGC Team Sheet</h1>
-      <p>Convert your Showdown team to a VGC team sheet!</p>
+      <AppTitle>Showdown to VGC Team Sheet</AppTitle>
+      <AppSubTitle>Convert your Showdown team to a VGC team sheet!</AppSubTitle>
       <DualColumnContainer>
         <ShowdownInput
           placeholder="Paste your Showdown team here..."
@@ -97,7 +113,7 @@ export default function App() {
         />
       </DualColumnContainer>
 
-      <DownloadButton onClick={handleDownload}>
+      <DownloadButton onClick={handleDownload} disabled={showdownTeamText.trim().length === 0}>
         Download VGC Team Sheet
       </DownloadButton>
     </AppContainer>
