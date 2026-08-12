@@ -4,7 +4,12 @@ import PlayerInformationComponent from "./components/PlayerInformation.component
 import { PlayerInformation } from "./types/player-information";
 import { type GenerationNum } from "@pkmn/data";
 import { generatePDF } from "./utils/pdf";
-import { getShowdownTeam, getVGCTeam } from "@kasp470f/showdown-to-vgc";
+import { getShowdownTeam, getVGCTeam, type VGCTeam } from "@kasp470f/showdown-to-vgc";
+
+/** Strip Mega form suffixes (e.g. "-Mega", "-Mega-X", "-Mega-Y", "-Mega-Z") from Pokémon names. */
+function normalizePokemonNames(team: VGCTeam): VGCTeam {
+	return team.map((poke) => ({ ...poke, name: poke.name.replace(/-Mega(?:-[XYZ])?$/, "") }));
+}
 
 const AppContainer = styled.div`
   display: flex;
@@ -83,9 +88,9 @@ export default function App() {
     const parsedTeam = getShowdownTeam(showdownTeamText, generationNum);
     if (!parsedTeam) return; 
 
-    const vgcTeam = getVGCTeam(parsedTeam, generationNum, "champions");
-
+    let vgcTeam = getVGCTeam(parsedTeam, generationNum, "champions");
     if (vgcTeam) {
+      vgcTeam = normalizePokemonNames(vgcTeam);
       generatePDF(
         vgcTeam,
         playerInformation,
