@@ -4,7 +4,7 @@ import type { Format, VGCTeam } from "@kasp470f/showdown-to-vgc";
 
 /** Strip form suffixes (e.g. "-Mega", "-Mega-X", "-Mega-Y") from the end of a Pokémon name. */
 function normalizePokemonName(name: string): string {
-	return name.replace(/-Mega(?:-[XY])?$/, "");
+	return name.replace(/-Mega(?:-[XYZ])?$/, "");
 }
 
 export async function generatePDF(vgcTeam: VGCTeam, info: PlayerInformation, format: Format, teamName: string | undefined): Promise<void> {
