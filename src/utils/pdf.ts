@@ -2,6 +2,11 @@ import { PDFCheckBox, PDFDocument, PDFForm, PDFTextField } from "pdf-lib";
 import type { PlayerInformation } from "../types/player-information";
 import type { Format, VGCTeam } from "@kasp470f/showdown-to-vgc";
 
+/** Strip form suffixes (e.g. "-Mega", "-Mega-X", "-Mega-Y") from the end of a Pokémon name. */
+function normalizePokemonName(name: string): string {
+	return name.replace(/-Mega(?:-[XY])?$/, "");
+}
+
 export async function generatePDF(vgcTeam: VGCTeam, info: PlayerInformation, format: Format, teamName: string | undefined): Promise<void> {
 	if (!vgcTeam) return;
 
@@ -28,7 +33,7 @@ export async function generatePDF(vgcTeam: VGCTeam, info: PlayerInformation, for
 		for (let i = 0; i < vgcTeam.length; i++) {
 			const poke = vgcTeam[i];
 
-			setPokemonTextFields(form, "Pokémon", i, poke.name!);
+			setPokemonTextFields(form, "Pokémon", i, normalizePokemonName(poke.name!));
 			if (format === "champions") {
 				setPokemonTextFields(form, "Stat Alignment", i, poke.nature || ""); // Set nature in the stat alignment field if available, otherwise leave it blank
 			} else {
